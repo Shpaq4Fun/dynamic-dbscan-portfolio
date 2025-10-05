@@ -110,6 +110,10 @@ const DynamicBackground: React.FC = () => {
       frameCount++;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // Fill canvas with very dark blue background
+      ctx.fillStyle = 'rgb(10, 15, 31)'; // Very dark blue
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       // --- Update and draw lines with fading ---
       const linesToDelete: string[] = [];
       linesRef.current.forEach((line, key) => {
