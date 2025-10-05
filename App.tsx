@@ -4,9 +4,9 @@ import Portfolio from './components/Portfolio';
 
 const App: React.FC = () => {
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-black">
+    <div className="relative w-full overflow-x-hidden">
       <DynamicBackground />
-      <div className="relative min-h-screen w-full">
+      <div className="relative w-full">
         <Portfolio />
       </div>
     </div>

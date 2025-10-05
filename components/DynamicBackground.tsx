@@ -81,19 +81,20 @@ const DynamicBackground: React.FC = () => {
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.height = Math.max(window.innerHeight, document.body.scrollHeight);
       // Force canvas to maintain proper aspect ratio
       canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
+      canvas.style.height = Math.max(window.innerHeight, document.body.scrollHeight) + 'px';
     };
 
     if (pointsRef.current.length === 0) {
+      const docHeight = Math.max(window.innerHeight, document.body.scrollHeight);
       for (let i = 0; i < NUM_POINTS; i++) {
         const angle = Math.random() * 2 * Math.PI;
         pointsRef.current.push({
           id: i,
           x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
+          y: Math.random() * docHeight,
           dx: Math.cos(angle) * SPEED,
           dy: Math.sin(angle) * SPEED,
           clusterId: 0,
@@ -170,7 +171,8 @@ const DynamicBackground: React.FC = () => {
         point.y += point.dy;
 
         if (point.x <= 0 || point.x >= canvas.width) point.dx *= -1;
-        if (point.y <= 0 || point.y >= canvas.height) point.dy *= -1;
+        const docHeight = Math.max(window.innerHeight, document.body.scrollHeight);
+        if (point.y <= 0 || point.y >= docHeight) point.dy *= -1;
 
         const clusterIndex = (point.clusterId - 1) % clusterColors.length;
         const color = point.clusterId > 0 ? clusterColors[clusterIndex] : noiseColor;
@@ -272,10 +274,11 @@ const DynamicBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute top-0 left-0 w-full h-full z-0"
+      className="fixed top-0 left-0 w-full z-0"
       style={{
         width: '100vw',
-        height: '100vh',
+        height: '100%',
+        minHeight: '100vh',
         display: 'block'
       }}
     />
