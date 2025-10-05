@@ -29,6 +29,10 @@ const DynamicBackground: React.FC = () => {
     'rgb(70, 140, 220)',  // Steel Blue
     'rgb(135, 206, 255)', // Light Sky Blue
     'rgb(30, 144, 255)',  // Dodger Blue
+    'rgba(0, 255, 170, 1)',  // 
+    'rgba(94, 255, 0, 1)',  // 
+    'rgba(179, 255, 0, 1)',  // 
+    'rgba(255, 208, 0, 1)',  // 
   ];
   const noiseColor = 'rgb(150, 150, 150)';
 
@@ -226,15 +230,17 @@ const DynamicBackground: React.FC = () => {
                     const key = p1.id < p2.id ? `${p1.id}-${p2.id}` : `${p2.id}-${p1.id}`;
                     currentLineKeys.add(key);
 
-                    const color = clusterColors[(parseInt(clusterId) - 1) % clusterColors.length];
+                    const clusterIndex = (parseInt(clusterId) - 1) % clusterColors.length;
+                    const color = clusterColors[clusterIndex];
                     if (!linesRef.current.has(key)) {
                         // New line, start it with alpha 0
                         linesRef.current.set(key, { p1, p2, color, alpha: 0, targetAlpha: 0.4 });
                     } else {
-                        // Existing line, ensure its target is to be visible
+                        // Existing line, ensure its target is to be visible and update color
                         const line = linesRef.current.get(key)!;
                         line.p1 = p1; // Update positions
                         line.p2 = p2;
+                        line.color = color; // Update color to match current cluster color
                         line.targetAlpha = 0.3;
                     }
                 }
