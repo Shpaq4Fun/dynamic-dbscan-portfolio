@@ -2,12 +2,12 @@ import React, { useRef, useEffect } from 'react';
 import { Point } from '../types';
 import './Portfolio.css';
 
-const NUM_POINTS = window.screen.width/4; // Fixed number for better performance across all screen sizes
-const SPEED = 0.1;
+const NUM_POINTS = window.screen.width*window.screen.width/6000; // Fixed number for better performance across all screen sizes
+const SPEED = 0.12;
 const POINT_RADIUS = 3;
-const EPSILON = 70; // DBSCAN epsilon (radius)
-const MIN_PTS = 6; // DBSCAN min points
-const FADE_SPEED = 0.15; // Speed of line fading
+const EPSILON = 60; // DBSCAN epsilon (radius)
+const MIN_PTS = 7; // DBSCAN min points
+const FADE_SPEED = 0.05; // Speed of line fading
 const GRID_SIZE = 100; // Size of each grid cell for spatial partitioning
 const TARGET_FPS = 30; // Target frame rate for better performance
 const FRAME_INTERVAL = 1000 / TARGET_FPS; // Time between frames in milliseconds
