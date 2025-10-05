@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { Point } from '../types';
 
-const NUM_POINTS = Math.round(window.innerWidth/4);
+const NUM_POINTS = Math.round(window.innerWidth/3);
 const SPEED = 0.08;
 const POINT_RADIUS = 3;
-const EPSILON = 100; // DBSCAN epsilon (radius)
+const EPSILON = 80; // DBSCAN epsilon (radius)
 const MIN_PTS = 6; // DBSCAN min points
 const FADE_SPEED = 0.02; // Speed of line fading
 
