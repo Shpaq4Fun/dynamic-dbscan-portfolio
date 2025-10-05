@@ -26,11 +26,11 @@ const DynamicBackground: React.FC = () => {
   const clusterColors = [
     'rgb(0, 191, 255)',   // Deep Sky Blue
     'rgb(0, 255, 255)',   // Cyan / Aqua
-    'rgb(70, 130, 180)',  // Steel Blue
-    'rgb(135, 206, 250)', // Light Sky Blue
+    'rgb(70, 140, 220)',  // Steel Blue
+    'rgb(135, 206, 255)', // Light Sky Blue
     'rgb(30, 144, 255)',  // Dodger Blue
   ];
-  const noiseColor = 'rgb(100, 100, 100)';
+  const noiseColor = 'rgb(150, 150, 150)';
 
   const dbscan = (points: Point[]) => {
     const dist = (p1: Point, p2: Point) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
@@ -171,7 +171,7 @@ const DynamicBackground: React.FC = () => {
         if (point.clusterId > 0) {
             ctx.shadowColor = color;
             // Dynamic glow intensity based on point alpha for enhanced visual feedback
-            ctx.shadowBlur = 35 + (point.alpha * 15); // 35-50 range based on fade state
+            ctx.shadowBlur = 55 + (point.alpha * 15); // 35-50 range based on fade state
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
         } else {
