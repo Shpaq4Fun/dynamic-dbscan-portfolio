@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Point } from '../types';
 
 const NUM_POINTS = 400;
-const SPEED = 0.1;
+const SPEED = 0.08;
 const POINT_RADIUS = 3;
 const EPSILON = 60; // DBSCAN epsilon (radius)
 const MIN_PTS = 5; // DBSCAN min points
@@ -93,6 +93,10 @@ const DynamicBackground: React.FC = () => {
           dx: Math.cos(angle) * SPEED,
           dy: Math.sin(angle) * SPEED,
           clusterId: 0,
+          alpha: 0.3, // Start slightly visible
+          targetAlpha: 0.3,
+          size: POINT_RADIUS * 0.5, // Start smaller
+          targetSize: POINT_RADIUS * 0.5,
         });
       }
     }
@@ -135,6 +139,23 @@ const DynamicBackground: React.FC = () => {
       
       linesToDelete.forEach(key => linesRef.current.delete(key));
 
+      // --- Update point fading (size and opacity) ---
+      for (const point of pointsRef.current) {
+        // Smoothly transition alpha (opacity)
+        if (Math.abs(point.alpha - point.targetAlpha) > 0.001) {
+          point.alpha += (point.targetAlpha - point.alpha) * FADE_SPEED;
+        } else {
+          point.alpha = point.targetAlpha;
+        }
+
+        // Smoothly transition size
+        if (Math.abs(point.size - point.targetSize) > 0.001) {
+          point.size += (point.targetSize - point.size) * FADE_SPEED;
+        } else {
+          point.size = point.targetSize;
+        }
+      }
+
       // --- Update and draw points ---
       for (const point of pointsRef.current) {
         point.x += point.dx;
@@ -155,15 +176,17 @@ const DynamicBackground: React.FC = () => {
         }
 
         ctx.beginPath();
-        const radius = point.clusterId === -1 ? 0.5 * POINT_RADIUS : POINT_RADIUS;
+        const radius = point.size;
         ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
         ctx.fillStyle = color;
+        ctx.globalAlpha = point.alpha;
         ctx.fill();
+        ctx.globalAlpha = 1; // Reset alpha for next elements
       }
       ctx.shadowBlur = 0; // Reset shadow for next frame elements
 
       // --- Periodically run DBSCAN and update line targets ---
-      if (frameCount % 250 === 0) {
+      if (frameCount % 350 === 0) {
         dbscan(pointsRef.current);
         const currentLineKeys = new Set<string>();
         const clusters: { [key: number]: Point[] } = {};
@@ -172,6 +195,17 @@ const DynamicBackground: React.FC = () => {
           if (p.clusterId > 0) {
             if (!clusters[p.clusterId]) clusters[p.clusterId] = [];
             clusters[p.clusterId].push(p);
+            // Set target values for clustered points
+            p.targetAlpha = 1.0; // Full opacity for clustered points
+            p.targetSize = POINT_RADIUS * 1.2; // Slightly larger for clustered points
+          } else if (p.clusterId === -1) {
+            // Set target values for noise points
+            p.targetAlpha = 0.4; // Dimmer for noise points
+            p.targetSize = POINT_RADIUS * 0.6; // Smaller for noise points
+          } else {
+            // Set target values for unclassified points
+            p.targetAlpha = 0.3; // Very dim for unclassified points
+            p.targetSize = POINT_RADIUS * 0.5; // Small for unclassified points
           }
         });
 
