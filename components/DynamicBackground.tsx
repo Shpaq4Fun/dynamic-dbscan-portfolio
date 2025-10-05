@@ -8,7 +8,7 @@ const POINT_RADIUS = 3;
 const EPSILON = 60; // DBSCAN epsilon (radius)
 const MIN_PTS = 7; // DBSCAN min points
 const FADE_SPEED = 0.05; // Speed of line fading
-const GRID_SIZE = 100; // Size of each grid cell for spatial partitioning
+const GRID_SIZE = 50; // Size of each grid cell for spatial partitioning
 const TARGET_FPS = 30; // Target frame rate for better performance
 const FRAME_INTERVAL = 1000 / TARGET_FPS; // Time between frames in milliseconds
 
