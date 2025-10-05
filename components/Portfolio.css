@@ -14,8 +14,8 @@ body {
 }
 
 .section-card {
-  background-color: rgba(27, 36, 66, 0.7); /* Translucent dark blue */
-  backdrop-filter: blur(1px);
+  background-color: rgba(25, 33, 59, 0.7); /* Translucent dark blue */
+  backdrop-filter: blur(3px);
   position: relative;
   -webkit-backdrop-filter: blur(5px);
   padding: 1.5rem;

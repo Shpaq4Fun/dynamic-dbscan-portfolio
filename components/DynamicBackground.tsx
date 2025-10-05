@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { Point } from '../types';
+import './Portfolio.css';
 
 const NUM_POINTS = window.screen.width/4; // Fixed number for better performance across all screen sizes
 const SPEED = 0.1;
@@ -200,10 +201,15 @@ const DynamicBackground: React.FC = () => {
 
       lastFrameTimeRef.current = currentTime;
       frameCount++;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Fill canvas with very dark blue background
-      ctx.fillStyle = 'rgb(7, 10, 25)'; // Very dark blue
+      // ctx.fillStyle = 'rgb(7, 10, 25)'; // Very dark blue
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height, 200, canvas.width/2, canvas.height, 800)
+      gradient.addColorStop(0, 'rgba(24, 33, 73, 1)');
+      gradient.addColorStop(1, 'rgb(7, 10, 25)');
+      ctx.fillStyle = gradient; // Very dark blue
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // --- Update and draw lines with fading ---
