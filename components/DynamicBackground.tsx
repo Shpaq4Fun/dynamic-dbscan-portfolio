@@ -1,11 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import { Point } from '../types';
 
-const NUM_POINTS = 800;
+const NUM_POINTS = Math.round(window.innerWidth/4);
 const SPEED = 0.08;
 const POINT_RADIUS = 3;
-const EPSILON = 70; // DBSCAN epsilon (radius)
-const MIN_PTS = 7; // DBSCAN min points
+const EPSILON = 100; // DBSCAN epsilon (radius)
+const MIN_PTS = 6; // DBSCAN min points
 const FADE_SPEED = 0.02; // Speed of line fading
 
 // A simple line object for tracking fades
@@ -29,7 +29,7 @@ const DynamicBackground: React.FC = () => {
     'rgb(70, 140, 220)',  // Steel Blue
     'rgb(135, 206, 255)', // Light Sky Blue
     'rgb(30, 144, 255)',  // Dodger Blue
-    'rgba(88, 255, 199, 1)'  // 
+    // 'rgba(88, 255, 199, 1)'  // 
     // 'rgba(94, 255, 0, 1)',  // 
     // 'rgba(179, 255, 0, 1)',  // 
     // 'rgba(255, 208, 0, 1)'  // 
@@ -237,14 +237,14 @@ const DynamicBackground: React.FC = () => {
                     const color = clusterColors[clusterIndex];
                     if (!linesRef.current.has(key)) {
                         // New line, start it with alpha 0
-                        linesRef.current.set(key, { p1, p2, color, alpha: 0, targetAlpha: 0.3 });
+                        linesRef.current.set(key, { p1, p2, color, alpha: 0, targetAlpha: 0.25 });
                     } else {
                         // Existing line, ensure its target is to be visible and update color
                         const line = linesRef.current.get(key)!;
                         line.p1 = p1; // Update positions
                         line.p2 = p2;
                         line.color = color; // Update color to match current cluster color
-                        line.targetAlpha = 0.3;
+                        line.targetAlpha = 0.25;
                     }
                 }
             }
