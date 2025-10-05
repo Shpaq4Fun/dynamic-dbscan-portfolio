@@ -171,7 +171,7 @@ const DynamicBackground: React.FC = () => {
         if (point.clusterId > 0) {
             ctx.shadowColor = color;
             // Dynamic glow intensity based on point alpha for enhanced visual feedback
-            ctx.shadowBlur = 55 + (point.alpha * 15); // 35-50 range based on fade state
+            ctx.shadowBlur = 56 + (point.alpha * 15); // 35-50 range based on fade state
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
         } else {
