@@ -230,7 +230,8 @@ const DynamicBackground: React.FC = () => {
                     const key = p1.id < p2.id ? `${p1.id}-${p2.id}` : `${p2.id}-${p1.id}`;
                     currentLineKeys.add(key);
 
-                    const clusterIndex = (parseInt(clusterId) - 1) % clusterColors.length;
+                    // Get color directly from the first point to ensure consistency
+                    const clusterIndex = (p1.clusterId - 1) % clusterColors.length;
                     const color = clusterColors[clusterIndex];
                     if (!linesRef.current.has(key)) {
                         // New line, start it with alpha 0
