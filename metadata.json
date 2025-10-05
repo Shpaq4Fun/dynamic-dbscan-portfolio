@@ -1,0 +1,5 @@
+{
+  "name": "Dynamic DBSCAN Background",
+  "description": "A visually engaging web page featuring a dynamic background of 100 points moving in 2D space. The points are clustered in real-time using the DBSCAN algorithm, with their colors reflecting their cluster assignments, all set against a dark, aesthetically pleasing theme.",
+  "requestFramePermissions": []
+}
