@@ -4,8 +4,8 @@ import { Point } from '../types';
 const NUM_POINTS = 800;
 const SPEED = 0.08;
 const POINT_RADIUS = 3;
-const EPSILON = 80; // DBSCAN epsilon (radius)
-const MIN_PTS = 6; // DBSCAN min points
+const EPSILON = 70; // DBSCAN epsilon (radius)
+const MIN_PTS = 7; // DBSCAN min points
 const FADE_SPEED = 0.02; // Speed of line fading
 
 // A simple line object for tracking fades
@@ -237,14 +237,14 @@ const DynamicBackground: React.FC = () => {
                     const color = clusterColors[clusterIndex];
                     if (!linesRef.current.has(key)) {
                         // New line, start it with alpha 0
-                        linesRef.current.set(key, { p1, p2, color, alpha: 0, targetAlpha: 0.5 });
+                        linesRef.current.set(key, { p1, p2, color, alpha: 0, targetAlpha: 0.3 });
                     } else {
                         // Existing line, ensure its target is to be visible and update color
                         const line = linesRef.current.get(key)!;
                         line.p1 = p1; // Update positions
                         line.p2 = p2;
                         line.color = color; // Update color to match current cluster color
-                        line.targetAlpha = 0.4;
+                        line.targetAlpha = 0.3;
                     }
                 }
             }
