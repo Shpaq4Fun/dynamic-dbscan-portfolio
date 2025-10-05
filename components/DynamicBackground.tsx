@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { Point } from '../types';
 
-const NUM_POINTS = window.screen.height/2; // Fixed number for better performance across all screen sizes
+const NUM_POINTS = window.screen.width/4; // Fixed number for better performance across all screen sizes
 const SPEED = 0.1;
 const POINT_RADIUS = 3;
-const EPSILON = 60; // DBSCAN epsilon (radius)
+const EPSILON = 70; // DBSCAN epsilon (radius)
 const MIN_PTS = 6; // DBSCAN min points
 const FADE_SPEED = 0.15; // Speed of line fading
 const GRID_SIZE = 100; // Size of each grid cell for spatial partitioning
