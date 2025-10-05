@@ -1,12 +1,15 @@
 import React, { useRef, useEffect } from 'react';
 import { Point } from '../types';
 
-const NUM_POINTS = Math.round(window.innerHeight);
-const SPEED = 0.08;
+const NUM_POINTS = window.screen.height/2; // Fixed number for better performance across all screen sizes
+const SPEED = 0.1;
 const POINT_RADIUS = 3;
-const EPSILON = 70; // DBSCAN epsilon (radius)
+const EPSILON = 60; // DBSCAN epsilon (radius)
 const MIN_PTS = 6; // DBSCAN min points
-const FADE_SPEED = 0.02; // Speed of line fading
+const FADE_SPEED = 0.15; // Speed of line fading
+const GRID_SIZE = 100; // Size of each grid cell for spatial partitioning
+const TARGET_FPS = 30; // Target frame rate for better performance
+const FRAME_INTERVAL = 1000 / TARGET_FPS; // Time between frames in milliseconds
 
 // A simple line object for tracking fades
 interface Line {
@@ -22,6 +25,9 @@ const DynamicBackground: React.FC = () => {
   const pointsRef = useRef<Point[]>([]);
   const linesRef = useRef<Map<string, Line>>(new Map());
   const animationFrameIdRef = useRef<number | null>(null);
+  const isVisibleRef = useRef<boolean>(true);
+  const cachedHeightRef = useRef<number>(window.innerHeight);
+  const lastFrameTimeRef = useRef<number>(0);
 
   const clusterColors = [
     'rgb(0, 191, 255)',   // Deep Sky Blue
@@ -36,11 +42,58 @@ const DynamicBackground: React.FC = () => {
   ];
   const noiseColor = 'rgb(150, 150, 150)';
 
+  // Grid-based spatial partitioning for efficient neighbor search
+  const createGrid = (points: Point[], gridSize: number) => {
+    const grid: Map<string, Point[]> = new Map();
+
+    points.forEach(point => {
+      const gridX = Math.floor(point.x / gridSize);
+      const gridY = Math.floor(point.y / gridSize);
+      const key = `${gridX},${gridY}`;
+
+      if (!grid.has(key)) {
+        grid.set(key, []);
+      }
+      grid.get(key)!.push(point);
+    });
+
+    return grid;
+  };
+
+  const getNeighborsFromGrid = (point: Point, grid: Map<string, Point[]>, allPoints: Point[], gridSize: number): Point[] => {
+    const gridX = Math.floor(point.x / gridSize);
+    const gridY = Math.floor(point.y / gridSize);
+
+    const neighbors: Point[] = [];
+
+    // Check 3x3 grid around the point's grid cell
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        const key = `${gridX + dx},${gridY + dy}`;
+        const cellPoints = grid.get(key);
+
+        if (cellPoints) {
+          cellPoints.forEach(otherPoint => {
+            if (point.id !== otherPoint.id) {
+              const distance = Math.sqrt((point.x - otherPoint.x) ** 2 + (point.y - otherPoint.y) ** 2);
+              if (distance <= EPSILON) {
+                neighbors.push(otherPoint);
+              }
+            }
+          });
+        }
+      }
+    }
+
+    return neighbors;
+  };
+
   const dbscan = (points: Point[]) => {
     const dist = (p1: Point, p2: Point) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
 
+    const grid = createGrid(points, GRID_SIZE);
     const getNeighbors = (point: Point, allPoints: Point[]): Point[] => {
-        return allPoints.filter(otherPoint => point.id !== otherPoint.id && dist(point, otherPoint) <= EPSILON);
+        return getNeighborsFromGrid(point, grid, allPoints, GRID_SIZE);
     };
 
     let clusterId = 1;
@@ -79,16 +132,23 @@ const DynamicBackground: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const getEfficientHeight = (): number => {
+      // Use a more efficient height calculation that doesn't trigger reflows
+      return Math.max(window.innerHeight, cachedHeightRef.current);
+    };
+
     const resizeCanvas = () => {
+      const newHeight = getEfficientHeight();
       canvas.width = window.innerWidth;
-      canvas.height = Math.max(window.innerHeight, document.body.scrollHeight);
+      canvas.height = newHeight;
       // Force canvas to maintain proper aspect ratio
       canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = Math.max(window.innerHeight, document.body.scrollHeight) + 'px';
+      canvas.style.height = newHeight + 'px';
+      cachedHeightRef.current = newHeight;
     };
 
     if (pointsRef.current.length === 0) {
-      const docHeight = Math.max(window.innerHeight, document.body.scrollHeight);
+      const docHeight = getEfficientHeight();
       for (let i = 0; i < NUM_POINTS; i++) {
         const angle = Math.random() * 2 * Math.PI;
         pointsRef.current.push({
@@ -98,8 +158,8 @@ const DynamicBackground: React.FC = () => {
           dx: Math.cos(angle) * SPEED,
           dy: Math.sin(angle) * SPEED,
           clusterId: 0,
-          alpha: 0.3, // Start slightly visible
-          targetAlpha: 0.3,
+          alpha: 0.5, // Start slightly visible
+          targetAlpha: 0.5,
           size: POINT_RADIUS * 0.5, // Start smaller
           targetSize: POINT_RADIUS * 0.5,
         });
@@ -109,9 +169,36 @@ const DynamicBackground: React.FC = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
+    // Set up Intersection Observer to pause animation when not visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisibleRef.current = entry.isIntersecting;
+        });
+      },
+      { threshold: 0.1 } // Trigger when 10% of the canvas is visible
+    );
+
+    if (canvas) {
+      observer.observe(canvas);
+    }
+
     let frameCount = 0;
 
-    const animate = () => {
+    const animate = (currentTime: number) => {
+      // Don't animate if component is not visible
+      if (!isVisibleRef.current) {
+        animationFrameIdRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      // Frame rate limiting
+      if (currentTime - lastFrameTimeRef.current < FRAME_INTERVAL) {
+        animationFrameIdRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      lastFrameTimeRef.current = currentTime;
       frameCount++;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -171,7 +258,7 @@ const DynamicBackground: React.FC = () => {
         point.y += point.dy;
 
         if (point.x <= 0 || point.x >= canvas.width) point.dx *= -1;
-        const docHeight = Math.max(window.innerHeight, document.body.scrollHeight);
+        const docHeight = getEfficientHeight();
         if (point.y <= 0 || point.y >= docHeight) point.dy *= -1;
 
         const clusterIndex = (point.clusterId - 1) % clusterColors.length;
@@ -199,7 +286,7 @@ const DynamicBackground: React.FC = () => {
       // ctx.shadowBlur = 0; // Reset shadow for next frame elements
 
       // --- Periodically run DBSCAN and update line targets ---
-      if (frameCount % 350 === 0) {
+      if (frameCount % 100 === 0) {
         dbscan(pointsRef.current);
         const currentLineKeys = new Set<string>();
         const clusters: { [key: number]: Point[] } = {};
@@ -213,11 +300,11 @@ const DynamicBackground: React.FC = () => {
             p.targetSize = POINT_RADIUS * 1.2; // Slightly larger for clustered points
           } else if (p.clusterId === -1) {
             // Set target values for noise points
-            p.targetAlpha = 0.7; // Dimmer for noise points
+            p.targetAlpha = 0.8; // Dimmer for noise points
             p.targetSize = POINT_RADIUS * 0.3; // Smaller for noise points
           } else {
             // Set target values for unclassified points
-            p.targetAlpha = 0.7; // Very dim for unclassified points
+            p.targetAlpha = 0.8; // Very dim for unclassified points
             p.targetSize = POINT_RADIUS * 0.3; // Small for unclassified points
           }
         });
@@ -261,13 +348,14 @@ const DynamicBackground: React.FC = () => {
       animationFrameIdRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    animate(0);
 
     return () => {
       if (animationFrameIdRef.current) {
         cancelAnimationFrame(animationFrameIdRef.current);
       }
       window.removeEventListener('resize', resizeCanvas);
+      observer.disconnect();
     };
   }, []);
 
