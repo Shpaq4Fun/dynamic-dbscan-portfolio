@@ -2,7 +2,8 @@ import React, { useRef, useEffect } from 'react';
 import { Point } from '../types';
 import './Portfolio.css';
 
-const NUM_POINTS = window.screen.width*window.screen.width/7000; // Fixed number for better performance across all screen sizes
+const NUM_POINTS = window.screen.width*window.screen.height/4000; // Fixed number for better performance across all screen sizes
+// const NUM_POINTS = Math.sqrt(window.screen.width*window.screen.height)/3; 
 const SPEED = 0.15;
 const POINT_RADIUS = 3;
 const EPSILON = 60; // DBSCAN epsilon (radius)
