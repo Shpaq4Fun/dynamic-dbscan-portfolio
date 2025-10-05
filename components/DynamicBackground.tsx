@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { Point } from '../types';
 
-const NUM_POINTS = Math.round(window.innerWidth/3);
+const NUM_POINTS = Math.round(window.innerHeight);
 const SPEED = 0.08;
 const POINT_RADIUS = 3;
-const EPSILON = 80; // DBSCAN epsilon (radius)
+const EPSILON = 70; // DBSCAN epsilon (radius)
 const MIN_PTS = 6; // DBSCAN min points
 const FADE_SPEED = 0.02; // Speed of line fading
 
@@ -178,15 +178,15 @@ const DynamicBackground: React.FC = () => {
         const color = point.clusterId > 0 ? clusterColors[clusterIndex] : noiseColor;
 
         // Set enhanced glow for clustered points with dynamic intensity
-        if (point.clusterId > 0) {
-            ctx.shadowColor = color;
-            // Dynamic glow intensity based on point alpha for enhanced visual feedback
-            ctx.shadowBlur = 56 + (point.alpha * 15); // 35-50 range based on fade state
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 0;
-        } else {
-            ctx.shadowBlur = 0;
-        }
+        // if (point.clusterId > 0) {
+        //     ctx.shadowColor = color;
+        //     // Dynamic glow intensity based on point alpha for enhanced visual feedback
+        //     ctx.shadowBlur = 56 + (point.alpha * 15); // 35-50 range based on fade state
+        //     ctx.shadowOffsetX = 0;
+        //     ctx.shadowOffsetY = 0;
+        // } else {
+        //     ctx.shadowBlur = 0;
+        // }
 
         ctx.beginPath();
         const radius = point.size;
@@ -196,7 +196,7 @@ const DynamicBackground: React.FC = () => {
         ctx.fill();
         ctx.globalAlpha = 1; // Reset alpha for next elements
       }
-      ctx.shadowBlur = 0; // Reset shadow for next frame elements
+      // ctx.shadowBlur = 0; // Reset shadow for next frame elements
 
       // --- Periodically run DBSCAN and update line targets ---
       if (frameCount % 350 === 0) {
