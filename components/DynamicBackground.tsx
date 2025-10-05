@@ -6,7 +6,7 @@ const SPEED = 0.08;
 const POINT_RADIUS = 3;
 const EPSILON = 60; // DBSCAN epsilon (radius)
 const MIN_PTS = 5; // DBSCAN min points
-const FADE_SPEED = 0.01; // Speed of line fading
+const FADE_SPEED = 0.008; // Speed of line fading
 
 // A simple line object for tracking fades
 interface Line {
@@ -167,10 +167,13 @@ const DynamicBackground: React.FC = () => {
         const clusterIndex = (point.clusterId - 1) % clusterColors.length;
         const color = point.clusterId > 0 ? clusterColors[clusterIndex] : noiseColor;
 
-        // Set glow for clustered points
+        // Set enhanced glow for clustered points with dynamic intensity
         if (point.clusterId > 0) {
             ctx.shadowColor = color;
-            ctx.shadowBlur = 20;
+            // Dynamic glow intensity based on point alpha for enhanced visual feedback
+            ctx.shadowBlur = 35 + (point.alpha * 15); // 35-50 range based on fade state
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
         } else {
             ctx.shadowBlur = 0;
         }
@@ -200,12 +203,12 @@ const DynamicBackground: React.FC = () => {
             p.targetSize = POINT_RADIUS * 1.2; // Slightly larger for clustered points
           } else if (p.clusterId === -1) {
             // Set target values for noise points
-            p.targetAlpha = 0.4; // Dimmer for noise points
-            p.targetSize = POINT_RADIUS * 0.6; // Smaller for noise points
+            p.targetAlpha = 0.7; // Dimmer for noise points
+            p.targetSize = POINT_RADIUS * 0.3; // Smaller for noise points
           } else {
             // Set target values for unclassified points
-            p.targetAlpha = 0.3; // Very dim for unclassified points
-            p.targetSize = POINT_RADIUS * 0.5; // Small for unclassified points
+            p.targetAlpha = 0.7; // Very dim for unclassified points
+            p.targetSize = POINT_RADIUS * 0.3; // Small for unclassified points
           }
         });
 
