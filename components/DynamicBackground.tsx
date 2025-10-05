@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import { Point } from '../types';
 
-const NUM_POINTS = 400;
+const NUM_POINTS = 800;
 const SPEED = 0.08;
 const POINT_RADIUS = 3;
-const EPSILON = 60; // DBSCAN epsilon (radius)
-const MIN_PTS = 5; // DBSCAN min points
-const FADE_SPEED = 0.008; // Speed of line fading
+const EPSILON = 80; // DBSCAN epsilon (radius)
+const MIN_PTS = 6; // DBSCAN min points
+const FADE_SPEED = 0.02; // Speed of line fading
 
 // A simple line object for tracking fades
 interface Line {
@@ -237,7 +237,7 @@ const DynamicBackground: React.FC = () => {
                     const color = clusterColors[clusterIndex];
                     if (!linesRef.current.has(key)) {
                         // New line, start it with alpha 0
-                        linesRef.current.set(key, { p1, p2, color, alpha: 0, targetAlpha: 0.4 });
+                        linesRef.current.set(key, { p1, p2, color, alpha: 0, targetAlpha: 0.5 });
                     } else {
                         // Existing line, ensure its target is to be visible and update color
                         const line = linesRef.current.get(key)!;
