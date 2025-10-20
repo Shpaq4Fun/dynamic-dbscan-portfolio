@@ -6,7 +6,7 @@ const NUM_POINTS = window.screen.width*window.screen.height/7000; // Fixed numbe
 // const NUM_POINTS = Math.sqrt(window.screen.width*window.screen.height)/3; 
 const SPEED = 0.15;
 const POINT_RADIUS = 2;
-const EPSILON = 90; // DBSCAN epsilon (radius)
+const EPSILON = 80; // DBSCAN epsilon (radius)
 const MIN_PTS = 5; // DBSCAN min points
 const FADE_SPEED = 0.05; // Speed of line fading
 const GRID_SIZE = 50; // Size of each grid cell for spatial partitioning
@@ -356,9 +356,9 @@ const DynamicBackground: React.FC = () => {
       // Fill canvas with very dark blue background
       // ctx.fillStyle = 'rgb(7, 10, 25)'; // Very dark blue
       // ctx.fillRect(0, 0, canvas.width, canvas.height);
-      const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height, 400, canvas.width/2, canvas.height, 800)
+      const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height, 200, canvas.width/2, canvas.height, 950)
       gradient.addColorStop(0, 'rgba(20, 28, 63, 1)');
-      gradient.addColorStop(1, 'rgb(7, 10, 25)');
+      gradient.addColorStop(1, 'rgb(6, 9, 23)');
       ctx.fillStyle = gradient; // Very dark blue
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 

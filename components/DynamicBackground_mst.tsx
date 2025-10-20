@@ -6,8 +6,8 @@ const NUM_POINTS = window.screen.width*window.screen.height/7000; // Fixed numbe
 // const NUM_POINTS = Math.sqrt(window.screen.width*window.screen.height)/3; 
 const SPEED = 0.15;
 const POINT_RADIUS = 2;
-const EPSILON = 90; // DBSCAN epsilon (radius)
-const MIN_PTS = 5; // DBSCAN min points
+const EPSILON = 70; // DBSCAN epsilon (radius)
+const MIN_PTS = 4; // DBSCAN min points
 const FADE_SPEED = 0.05; // Speed of line fading
 const GRID_SIZE = 50; // Size of each grid cell for spatial partitioning
 const TARGET_FPS = 30; // Target frame rate for better performance
@@ -44,137 +44,118 @@ const DynamicBackground: React.FC = () => {
   ];
   const noiseColor = 'rgb(150, 150, 150)';
 
-  // Helper function to check if two lines intersect, avoiding shared endpoints
+  // Helper function to check if two lines intersect
   const linesIntersect = (line1: {p1: Point, p2: Point}, line2: {p1: Point, p2: Point}): boolean => {
     const {p1: a1, p2: a2} = line1;
     const {p1: b1, p2: b2} = line2;
 
-    // Check if lines share an endpoint
-    const sharedPoints = [a1, a2].filter(p1 => [b1, b2].some(p2 => p1.id === p2.id));
-    if (sharedPoints.length > 0) {
-      return false; // Don't consider lines sharing an endpoint as intersecting
-    }
+    // Helper function to check orientation
+    const orientation = (p: Point, q: Point, r: Point): number => {
+      const val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+      if (val === 0) return 0; // collinear
+      return (val > 0) ? 1 : 2; // clock or counterclock wise
+    };
 
-    // Use orientations to check for proper intersection
+    // Helper function to check if point q lies on segment pr
+    const onSegment = (p: Point, q: Point, r: Point): boolean => {
+      if (q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) &&
+          q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y)) {
+        return true;
+      }
+      return false;
+    };
+
+    // Find the four orientations needed for general and special cases
     const o1 = orientation(a1, a2, b1);
     const o2 = orientation(a1, a2, b2);
     const o3 = orientation(b1, b2, a1);
     const o4 = orientation(b1, b2, a2);
 
-    // General case: orientations are different, indicating a proper intersection
-    if (o1 !== o2 && o3 !== o4) {
-      return true;
-    }
+    // General case
+    if (o1 !== o2 && o3 !== o4) return true;
 
-    // Special Cases for collinear lines (overlapping)
-    // Check if b1 lies on segment a1-a2 and orientations are collinear
-    if (o1 === 0 && pointOnSegment(a1, a2, b1)) return true;
-    // Check if b2 lies on segment a1-a2 and orientations are collinear
-    if (o2 === 0 && pointOnSegment(a1, a2, b2)) return true;
-    // Check if a1 lies on segment b1-b2 and orientations are collinear
-    if (o3 === 0 && pointOnSegment(b1, b2, a1)) return true;
-    // Check if a2 lies on segment b1-b2 and orientations are collinear
-    if (o4 === 0 && pointOnSegment(b1, b2, a2)) return true;
+    // Special cases
+    // a1, a2 and b1 are collinear and b1 lies on segment a1a2
+    if (o1 === 0 && onSegment(a1, b1, a2)) return true;
 
+    // a1, a2 and b2 are collinear and b2 lies on segment a1a2
+    if (o2 === 0 && onSegment(a1, b2, a2)) return true;
 
-    return false; // No intersection
+    // b1, b2 and a1 are collinear and a1 lies on segment b1b2
+    if (o3 === 0 && onSegment(b1, a1, b2)) return true;
+
+    // b1, b2 and a2 are collinear and a2 lies on segment b1b2
+    if (o4 === 0 && onSegment(b1, a2, b2)) return true;
+
+    return false;
   };
 
-  // Check if three points are collinear with tolerance for floating point errors
-  const isCollinear = (p1: Point, p2: Point, p3: Point): boolean => {
-    const area = Math.abs((p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y));
-    return area < 1e-6; // Small tolerance for floating point errors
-  };
-
-
-  // Check if point q lies on segment pr
-  const pointOnSegment = (p: Point, r: Point, q: Point): boolean => {
-    // Check if q is between p and r (including endpoints)
-    const minX = Math.min(p.x, r.x);
-    const maxX = Math.max(p.x, r.x);
-    const minY = Math.min(p.y, r.y);
-    const maxY = Math.max(p.y, r.y);
-
-    return q.x >= minX && q.x <= maxX && q.y >= minY && q.y <= maxY;
-  };
-
-  // Helper function to check orientation (with floating point tolerance)
-  const orientation = (p: Point, q: Point, r: Point): number => {
-    const val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-
-    if (Math.abs(val) < 1e-6) return 0; // collinear (with tolerance)
-    return (val > 0) ? 1 : 2; // clock or counterclock wise
-  };
-
+  // Function to generate a planar graph using Delaunay triangulation approach
   const getPlanarGraph = (points: Point[]): {p1: Point, p2: Point}[] => {
-    if (points.length < 2) {
-      return [];
+    if (points.length < 3) {
+      // For 2 points, just return the single edge
+      return points.length === 2 ? [{p1: points[0], p2: points[1]}] : [];
     }
-  
-    // 1. Get all possible edges and sort by distance
-    const allEdges = getAllPossibleEdges(points);
-    allEdges.sort((a, b) => a.distance - b.distance);
-  
-    const planarEdges: {p1: Point, p2: Point}[] = [];
-    const parent: {[key: number]: number} = {};
-  
-    // Disjoint Set Union (DSU) helper functions
-    const find = (i: number) => {
-      if (parent[i] === i) return i;
-      return parent[i] = find(parent[i]);
-    };
-  
-    const union = (i: number, j: number) => {
-      const rootI = find(i);
-      const rootJ = find(j);
-      if (rootI !== rootJ) {
-        parent[rootI] = rootJ;
-        return true;
-      }
-      return false;
-    };
-  
-    // Initialize DSU
-    points.forEach(p => parent[p.id] = p.id);
-  
-    // 2. Build Minimum Spanning Tree (MST) using Kruskal's algorithm
-    let edgesInMst = 0;
-    for (const edge of allEdges) {
-      if (edgesInMst === points.length - 1) break;
-      if (union(edge.p1.id, edge.p2.id)) {
-        planarEdges.push({p1: edge.p1, p2: edge.p2});
-        edgesInMst++;
+
+    // Use a better algorithm: start with minimum spanning tree, then add non-crossing edges
+    const edges = getMinimumSpanningTree(points);
+    const allPossibleEdges = getAllPossibleEdges(points);
+
+    // Sort remaining edges by distance (shorter first) for better connectivity
+    const remainingEdges = allPossibleEdges.filter(edge => !isEdgeInTree(edge, edges));
+    remainingEdges.sort((a, b) => a.distance - b.distance);
+
+    // Add edges that don't create crossings
+    for (const edge of remainingEdges) {
+      if (!createsCrossing(edge, edges)) {
+        edges.push(edge);
       }
     }
-  
-    // 3. Add remaining non-intersecting edges
-    for (const edge of allEdges) {
-      // Check if the edge is already in the graph
-      const alreadyExists = planarEdges.some(e =>
-        (e.p1.id === edge.p1.id && e.p2.id === edge.p2.id) ||
-        (e.p1.id === edge.p2.id && e.p2.id === edge.p1.id)
-      );
-      if (alreadyExists) continue;
-  
-      let intersects = false;
-      for (const existingEdge of planarEdges) {
-        if (linesIntersect(edge, existingEdge)) {
-          intersects = true;
-          break;
+
+    return edges;
+  };
+
+  // Get minimum spanning tree using Prim's algorithm
+  const getMinimumSpanningTree = (points: Point[]): {p1: Point, p2: Point, distance: number}[] => {
+    const edges: {p1: Point, p2: Point, distance: number}[] = [];
+    const visited = new Set<number>();
+    const unvisited = new Set(points.map(p => p.id));
+
+    if (points.length === 0) return edges;
+
+    // Start with the first point
+    const startPoint = points[0];
+    visited.add(startPoint.id);
+    unvisited.delete(startPoint.id);
+
+    while (unvisited.size > 0) {
+      let minDistance = Infinity;
+      let bestEdge: {p1: Point, p2: Point, distance: number} | null = null;
+
+      // Find the closest unvisited point to any visited point
+      for (const visitedId of visited) {
+        const visitedPoint = points.find(p => p.id === visitedId)!;
+        for (const unvisitedId of unvisited) {
+          const unvisitedPoint = points.find(p => p.id === unvisitedId)!;
+          const distance = Math.sqrt((visitedPoint.x - unvisitedPoint.x) ** 2 + (visitedPoint.y - unvisitedPoint.y) ** 2);
+
+          if (distance < minDistance) {
+            minDistance = distance;
+            bestEdge = {p1: visitedPoint, p2: unvisitedPoint, distance};
+          }
         }
       }
-  
-      if (!intersects) {
-        planarEdges.push({p1: edge.p1, p2: edge.p2});
+
+      if (bestEdge) {
+        edges.push(bestEdge);
+        visited.add(bestEdge.p2.id);
+        unvisited.delete(bestEdge.p2.id);
+      } else {
+        break;
       }
     }
-  
-    return planarEdges;
-  };
 
-  // Get edge key for consistent identification
-  const getEdgeKey = (p1: Point, p2: Point): string => {
-    return p1.id < p2.id ? `${p1.id}-${p2.id}` : `${p2.id}-${p1.id}`;
+    return edges;
   };
 
   // Get all possible edges with their distances
@@ -191,6 +172,24 @@ const DynamicBackground: React.FC = () => {
     }
 
     return edges;
+  };
+
+  // Check if an edge is already in the tree
+  const isEdgeInTree = (edge: {p1: Point, p2: Point}, treeEdges: {p1: Point, p2: Point}[]): boolean => {
+    return treeEdges.some(treeEdge =>
+      (treeEdge.p1.id === edge.p1.id && treeEdge.p2.id === edge.p2.id) ||
+      (treeEdge.p1.id === edge.p2.id && treeEdge.p2.id === edge.p1.id)
+    );
+  };
+
+  // Check if adding an edge would create a crossing
+  const createsCrossing = (newEdge: {p1: Point, p2: Point}, existingEdges: {p1: Point, p2: Point}[]): boolean => {
+    for (const existingEdge of existingEdges) {
+      if (linesIntersect(newEdge, existingEdge)) {
+        return true;
+      }
+    }
+    return false;
   };
 
   // Grid-based spatial partitioning for efficient neighbor search
@@ -356,9 +355,9 @@ const DynamicBackground: React.FC = () => {
       // Fill canvas with very dark blue background
       // ctx.fillStyle = 'rgb(7, 10, 25)'; // Very dark blue
       // ctx.fillRect(0, 0, canvas.width, canvas.height);
-      const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height, 400, canvas.width/2, canvas.height, 800)
+      const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height, 200, canvas.width/2, canvas.height, 950)
       gradient.addColorStop(0, 'rgba(20, 28, 63, 1)');
-      gradient.addColorStop(1, 'rgb(7, 10, 25)');
+      gradient.addColorStop(1, 'rgb(6, 9, 23)');
       ctx.fillStyle = gradient; // Very dark blue
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -492,14 +491,14 @@ const DynamicBackground: React.FC = () => {
                  const color = clusterColors[clusterIndex];
                  if (!linesRef.current.has(key)) {
                      // New line, start it with alpha 0
-                     linesRef.current.set(key, { p1, p2, color, alpha: 0, targetAlpha: 0.3 });
+                     linesRef.current.set(key, { p1, p2, color, alpha: 0, targetAlpha: 0.25 });
                  } else {
                      // Existing line, ensure its target is to be visible and update color
                      const line = linesRef.current.get(key)!;
                      line.p1 = p1; // Update positions
                      line.p2 = p2;
                      line.color = color; // Update color to match current cluster color
-                     line.targetAlpha = 0.3;
+                     line.targetAlpha = 0.25;
                  }
              }
          }

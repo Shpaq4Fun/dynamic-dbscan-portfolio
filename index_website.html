@@ -1,0 +1,342 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jacek Wodecki | Researcher</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0f1f; /* A dark navy blue */
+            color: #e0e0e0;
+            overflow-x: hidden;
+			padding: 0.05rem;
+        }
+        #interactive-bg {
+            position: fixed;
+            top: 120;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4; /* Softer effect */
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        .section-card {
+            background-color: rgba(27, 36, 66, 0.7); /* Translucent dark blue */
+            backdrop-filter: blur(1px);
+            position: relative;
+            -webkit-backdrop-filter: blur(5px);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+			border-radius: 10px;
+            /* border: 1px solid rgba(0, 191, 255, 0.2); */
+            box-shadow: 
+            0 4px 6px #000000a0,
+            0 6px 10px #00000060; 
+        }
+        .section-card:hover {
+            border-color: rgba(0, 191, 255, 0.5);
+            transform: translateY(-5px);
+        }
+        .highlight-text {
+            color: #00BFFF; /* Deep Sky Blue */
+        }
+        .publication-link {
+            transition: color 0.3s ease;
+        }
+        .publication-link:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        .social-link {
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .social-link:hover {
+            transform: scale(1.1);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <canvas id="interactive-bg"></canvas>
+
+    <div class="content-wrapper min-h-screen flex items-center justify-center p-4 sm:p-5 lg:p-8">
+        <main class="max-w-4xl w-full space-y-8">
+            
+            
+            <!-- Header Section -->
+            <header class="text-center space-y-6 relative" style="padding-bottom: 20px;">
+                <!-- MODIFIED: Replaced placeholder text with a photo placeholder URL, keeping the circular shape (rounded-full) -->
+                <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-4">
+                    <div class="flex-shrink-0">
+                        <img
+                            src="https://scontent.fktw1-1.fna.fbcdn.net/v/t39.30808-6/330110123_1386178918806868_3713378071254120577_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=tG5eJdulr3gQ7kNvwHQtzLx&_nc_oc=AdmcBRbZvtZ0QxZk2_qD8U1Lv5glQsy4LHw6MxdcpyQDzUQImi8DMYgxqXRJhLvrMyE&_nc_zt=23&_nc_ht=scontent.fktw1-1.fna&_nc_gid=an0v2DmubvJQu2-w_geZIg&oh=00_Afc2MMymAM86WPGDRoc-MRnjYyuCluGbKGNhwyOuik9b6w&oe=68E73617"
+                            alt="Jacek Wodecki's professional profile photo"
+                            class="w-50 h-70 sm:w-50 sm:h-60 rounded-20px object-cover border-4 border-sky-500/50 shadow-lg"
+                            id="profile-photo"
+                        >
+                    </div>
+                    <div style="text-align:left; padding:10px">
+                        <h1 class="text-5xl sm:text-5xl text-white tracking-tight padding-50px">Jacek Wodecki, Ph.D.</h1>
+                        <p class="text-2xl text-gray-300" style="padding-top:10px">Assistant Professor</p>
+                        <p class="text-2xl text-gray-300" style="padding-top:10px">Wrocław University of Science and Technology</p>
+                        <p class="text-2xl text-gray-300" style="padding-top:10px"><a href="https://dmc.pwr.edu.pl/" class="publication-link text-2xl highlight-text font-semibold">Digital Mining Center</a></p>
+                        <!-- <p class="text-2xl text-gray-300" style="padding-top:10px"><pan class="highlight-text">Digital Mining Center</span></p> -->
+                        <!-- <p class="text-3xl font-light text-gray-100" style="padding-top:10px">Decoding Complexity in <span class="highlight-text font-medium">Signals and Systems</span></p> -->
+                    </div>
+                </div>
+            </header>
+
+            <!-- About Me Section -->
+            <section id="about" class="section-card">
+                <h2 class="text-3xl text-white mb-6 border-b-2 border-sky-500/30 pb-2">About Me</h2>
+                <p class="text-lg leading-relaxed text-gray-300">
+                    I am a researcher and teacher at the Faculty of Geoengineering, Mining and Geology at Wrocław University of Science and Technology. My work is centered on the challenges of <span class="highlight-text">multidimensional data analysis</span> and <span class="highlight-text">advanced signal processing</span>. I focus on developing novel methods for fault detection and condition monitoring in industrial environments, particularly those characterized by non-Gaussian noise. My passion lies in translating complex data into useful insights, leveraging techniques from <span class="highlight-text">machine learning</span>, <span class="highlight-text">algebra</span> and <span class="highlight-text">statistical analysis</span> to enhance the reliability and efficiency of industrial machinery.
+                </p>
+            </section>
+
+            <!-- Research Interests Section -->
+            <section id="research" class="section-card">
+                <h2 class="text-3xl text-white mb-4 border-b-2 border-sky-500/30 pb-2">Research Interests</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
+                    <div class="bg-gray-600/30 p-3 rounded-lg flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 highlight-text"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        <span>Advanced Signal Processing</span>
+                    </div>
+                    <div class="bg-gray-600/30 p-3 rounded-lg flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 highlight-text"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        <span>Machine Learning & AI</span>
+                    </div>
+                    <div class="bg-gray-600/30 p-3 rounded-lg flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 highlight-text"><path d="M12 1a2.828 2.828 0 0 0-2 4.828L3 13v6a2 2 0 0 0 2 2h6l7.172-7.172A2.828 2.828 0 0 0 12 1z"></path><path d="m18 13-1.5-1.5"></path></svg>
+                        <span>Condition Monitoring & Diagnostics</span>
+                    </div>
+                    <div class="bg-gray-600/30 p-3 rounded-lg flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 highlight-text">
+                        <path d="M11.614,25.866c-0.557,0-1.039-0.248-1.152-0.793L8.901,17.6l-1.028,1.774c-0.211,0.359-0.597,0.613-1.012,0.613H1.176 C0.527,19.987,0,19.46,0,18.813c0-0.65,0.527-1.178,1.176-1.178h5.013l2.235-3.777c0.247-0.417,0.721-0.644,1.205-0.562 c0.479,0.08,0.86,0.446,0.958,0.921l0.945,4.566l2.155-11.956c0.101-0.56,0.588-0.949,1.158-0.949c0.001,0,0.004,0,0.005,0 c0.571,0,1.058,0.396,1.154,0.958l2.3,13.421l0.74-1.875c0.176-0.45,0.61-0.749,1.093-0.749H30.57 c0.649,0,1.176,0.526,1.176,1.177c0,0.648-0.526,1.176-1.176,1.176h-9.635l-1.99,5.029c-0.192,0.49-0.682,0.787-1.215,0.737 c-0.522-0.056-0.947-0.452-1.037-0.972l-1.876-10.965l-2.046,11.225c-0.1,0.555-0.579,0.824-1.142,0.824 C11.624,25.866,11.619,25.866,11.614,25.866z"></path>
+                        </svg>
+                        <span>Non-Gaussian Data Analysis</span>
+                    </div>
+                    <div class="bg-gray-600/30 p-3 rounded-lg flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-3 highlight-text"><path d="M9.25 4V20M14.75 4V20M4 14.75H20M4 9.25H20M6 20H18C19.1046 20 20 19.1046 20 18V6C20 4.89543 19.1046 4 18 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span>Multidimensional Data Processing</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Selected Publications Section -->
+            <section id="publications" class="section-card">
+                <h2 class="text-3xl text-white mb-4 border-b-2 border-sky-500/30 pb-2">Most Cited Publications</h2>
+                <ul id="selected-publications-list" class="space-y-4 text-gray-300">
+                    <!-- Content is generated by JavaScript -->
+                </ul>
+                <div class="mt-6 text-center">
+                     <a href="https://scholar.google.com/citations?user=aPdWgQ8AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="publication-link text-lg highlight-text font-semibold">
+                        View all publications on Google Scholar &rarr;
+                    </a>
+                </div>
+            </section>
+
+            <!-- Most Recent Publications Section -->
+            <section id="recent-publications" class="section-card">
+                <h2 class="text-3xl text-white mb-4 border-b-2 border-sky-500/30 pb-2">Recent Publications</h2>
+                <ul id="recent-publications-list" class="space-y-4 text-gray-300">
+                    <!-- Content is generated by JavaScript -->
+                </ul>
+            </section>
+
+            <!-- Contact Section -->
+            <footer class="text-center text-gray-400 space-y-4 pt-8">
+                <p>Get in touch:</p>
+                <div class="flex items-center justify-center space-x-6">
+                    <a href="mailto:jacek.wodecki@pwr.edu.pl" class="social-link flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                        <span>Email</span>
+                    </a>
+                    <a href="https://scholar.google.com/citations?user=aPdWgQ8AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="social-link flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14z"></path><path d="M12 3v1"></path><path d="m6.6 5.2-1.4 1.4"></path><path d="M2 12h1"></path><path d="m6.6 18.8 1.4-1.4"></path><path d="m12 20.5 2.8-5"></path><path d="m17.4 18.8 1.4 1.4"></path><path d="M22 12h-1"></path><path d="m17.4 5.2-1.4-1.4"></path></svg>
+                        <span>Google Scholar</span>
+                    </a>
+                    <!-- NEW: Team Website Link Added -->
+                    <a href="https://dmc.pwr.edu.pl" target="_blank" rel="noopener noreferrer" class="social-link flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+                        <span>Digital Mining Center</span>
+                    </a>
+                </div>
+                <p class="text-sm pt-4">&copy; 2025 Jacek Wodecki. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // --- DATA FOR PUBLICATIONS ---
+        // To update, simply edit the content within these lists.
+
+        const selectedPublications = [
+            {
+                title: "An inspection robot for belt conveyor maintenance in underground mine—Infrared thermography for overheated idlers detection.",
+                authors: "J Szrek, J Wodecki, R Błażej, R Zimroz",
+                source: "Applied Sciences, 2020."
+            },
+            {
+                title: "Optimal filter design with progressive genetic algorithm for local damage detection in rolling bearings.",
+                authors: "J Wodecki, A Michalak, R Zimroz",
+                source: "Mechanical Systems and Signal Processing, 2018."
+            },
+            {
+                title: "Novel method of informative frequency band selection for vibration signal using Nonnegative Matrix Factorization of spectrogram matrix.",
+                authors: "J Wodecki, P Kruczek, A Bartkowiak, R Zimroz, A Wyłomańska",
+                source: "Mechanical Systems and Signal Processing, 2019."
+            }
+        ];
+
+        const recentPublications = [
+            {
+                title: "A Method for Assessing the Performance of Breaking Hammers Based on Acoustic Signal and Video Analysis.",
+                authors: "J Wodecki, P Dąbek, P Krot, A Wróblewski, R Zimroz",
+                source: "Applied Sciences , 2025."
+            },
+            {
+                title: "Heterogeneous Information Fusion for Robot-Based Automated Monitoring of Bearings in Harsh Environments via Ensemble of Classifiers with Dynamic Weighted Voting.",
+                authors: "M Siami, P Dąbek, H Shiri, A Michalak, J Wodecki, T Barszcz, R Zimroz",
+                source: "Sensors, 2025."
+            },
+            {
+                title: "A method for signal components identification in acoustic signal with non-Gaussian background noise using clustering of data in time-frequency domain.",
+                authors: "A Drewnicka, A Michalak, R Zimroz, A Kumar, A Wyłomańska, J Wodecki",
+                source: "Applied Acoustics, 2025."
+            }
+        ];
+
+        // --- RENDER PUBLICATIONS ---
+        function renderPublications(containerId, publications) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            let htmlContent = '';
+            publications.forEach(pub => {
+                // Highlight your name in the author list
+                const highlightedAuthors = pub.authors.replace('J Wodecki', '<strong class="highlight-text">J Wodecki</strong>');
+                
+                htmlContent += `
+                    <li>
+                        <p class="font-semibold text-lg text-white">${pub.title}</p>
+                        <p class="text-sm">${highlightedAuthors}. <em class="text-gray-400">${pub.source}</em></p>
+                    </li>
+                `;
+            });
+            container.innerHTML = htmlContent;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPublications('selected-publications-list', selectedPublications);
+            renderPublications('recent-publications-list', recentPublications);
+        });
+
+
+        // --- BACKGROUND ANIMATION SCRIPT (MODIFIED FOR WAVE SUPERPOSITION) ---
+        
+        const canvas = document.getElementById('interactive-bg');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        let mouse = { x: width / 2, y: height / 2 };
+        document.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // Class now represents a single component of the final complex wave
+        class Wave {
+            constructor() {
+                // Keep individual wave parameterization
+                this.amplitude = Math.random() * 60 + 5; 
+                this.frequency = Math.random() * 0.15 + 0.01;
+                this.phase = Math.random() * Math.PI * 2;
+                this.speed = Math.random() * 0.03 + 0.01;
+            }
+
+            // Calculates the vertical offset for a given x, applying an optional amplitude multiplier
+            getYOffset(x, dynamicAmplitudeMultiplier = 1) {
+                return Math.sin(x * this.frequency + this.phase) * this.amplitude * dynamicAmplitudeMultiplier;
+            }
+
+            // Updates the phase for continuous animation
+            update() {
+                this.phase += this.speed;
+            }
+        }
+
+        const waves = [];
+        // Generate 6 waves to be summed together
+        for (let i = 0; i < 10; i++) {
+            waves.push(new Wave());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            const baseLineY = height * 0.35; // Center Y line for the complex wave
+
+            // Start drawing the single, complicated wave
+            ctx.beginPath();
+
+            // Add glow effect using shadow
+            ctx.shadowColor = 'rgba(0, 191, 255, 1)'; // Cyan glow color
+            ctx.shadowBlur = 16; // Glow intensity
+            ctx.shadowOffsetX = 0; // Center the shadow
+            ctx.shadowOffsetY = 0; // Center the shadow
+
+            ctx.strokeStyle = 'rgba(0, 191, 255, 1)'; // Main line color
+            ctx.lineWidth = 2; // Slightly thicker for better visibility with glow
+
+            for (let i = 0; i <= width; i++) {
+                let totalYOffset = 0;
+
+                // Calculate mouse effect multiplier: strongest near the mouse
+                const distanceToMouse = Math.abs(i - mouse.x);
+                // The multiplier ranges from 1.0 (no effect) up to 2.0 (near mouse)
+                const mouseEffectMultiplier = 1.0 + Math.max(0, 1 - distanceToMouse / 150); 
+
+                // Sum the offsets of all component waves
+                waves.forEach(wave => {
+                    // Get offset, applying the mouse effect multiplier to all components
+                    totalYOffset += wave.getYOffset(i, mouseEffectMultiplier); 
+                });
+
+                // The final Y position is the base line plus the summed offset
+                const finalY = baseLineY + totalYOffset;
+
+                if (i === 0) {
+                    ctx.moveTo(i, finalY);
+                } else {
+                    ctx.lineTo(i, finalY);
+                }
+            }
+            
+            ctx.stroke(); // Draw the final complex wave line
+
+            // Update the phase of all component waves for motion
+            waves.forEach(wave => wave.update());
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
