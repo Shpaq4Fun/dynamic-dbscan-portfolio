@@ -464,12 +464,12 @@ const DynamicBackground: React.FC = () => {
             p.targetSize = POINT_RADIUS * 1.2; // Slightly larger for clustered points
           } else if (p.clusterId === -1) {
             // Set target values for noise points
-            p.targetAlpha = 0.8; // Dimmer for noise points
-            p.targetSize = POINT_RADIUS * 0.3; // Smaller for noise points
+            p.targetAlpha = 0.9; // Dimmer for noise points
+            p.targetSize = POINT_RADIUS * 0.4; // Smaller for noise points
           } else {
             // Set target values for unclassified points
-            p.targetAlpha = 0.8; // Very dim for unclassified points
-            p.targetSize = POINT_RADIUS * 0.3; // Small for unclassified points
+            p.targetAlpha = 0.9; // Very dim for unclassified points
+            p.targetSize = POINT_RADIUS * 0.4; // Small for unclassified points
           }
         });
 
@@ -492,14 +492,14 @@ const DynamicBackground: React.FC = () => {
                  const color = clusterColors[clusterIndex];
                  if (!linesRef.current.has(key)) {
                      // New line, start it with alpha 0
-                     linesRef.current.set(key, { p1, p2, color, alpha: 0, targetAlpha: 0.3 });
+                     linesRef.current.set(key, { p1, p2, color, alpha: 0, targetAlpha: 0.5});
                  } else {
                      // Existing line, ensure its target is to be visible and update color
                      const line = linesRef.current.get(key)!;
                      line.p1 = p1; // Update positions
                      line.p2 = p2;
                      line.color = color; // Update color to match current cluster color
-                     line.targetAlpha = 0.3;
+                     line.targetAlpha = 0.5;
                  }
              }
          }

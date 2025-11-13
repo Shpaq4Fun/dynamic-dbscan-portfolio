@@ -14,10 +14,10 @@ body {
 }
 
 .section-card {
-  background-color: rgba(25, 33, 59, 0.7); /* Translucent dark blue */
-  backdrop-filter: blur(3px);
+  background-color: rgba(25, 33, 59, 0.2); /* Translucent dark blue */
+  backdrop-filter: blur(2px);
   position: relative;
-  -webkit-backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(4px);
   padding: 1.5rem;
   transition: all 0.3s ease;
   border-radius: 10px;

@@ -13,7 +13,7 @@ const Portfolio: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-4">
             <div className="flex-shrink-0">
               <img
-                src="https://scontent-waw2-2.xx.fbcdn.net/v/t39.30808-6/330110123_1386178918806868_3713378071254120577_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=SJNQRNo2UvcQ7kNvwE5LRox&_nc_oc=AdmWriI7PY4R_wyAU0DYDbmhJupCGKEFMrHDc4oWJtiAGnPw7tUXYNvJnR3gAjrxAFk&_nc_zt=23&_nc_ht=scontent-waw2-2.xx&_nc_gid=YNSwfoHIxA5FHlx9Qc0msw&oh=00_AfdxpqZHLp0tedtqKaZR1APkpUJr5tHN6WiO_A4LzsBo4w&oe=68FBDD97"
+                src="https://scontent-waw2-2.xx.fbcdn.net/v/t39.30808-6/330110123_1386178918806868_3713378071254120577_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=hXWZNm8V6QQQ7kNvwGD7iev&_nc_oc=AdlaHBdlcGlBMV05Y51dZPaW62vuMCh5KPHFQ7g9YYKbzNuz03nC9mj2qwvUffP9Vg0&_nc_zt=23&_nc_ht=scontent-waw2-2.xx&_nc_gid=CiNIGGZ2yHvDYmdN5yABbA&oh=00_AfjkuFgFQhZfuuqJGJRsgvanP9ppDC1-G7g8jwFIgphbGA&oe=691B8197"
                 alt="Jacek Wodecki's professional profile photo"
                 className="w-50 h-70 sm:w-50 sm:h-60 rounded-20px object-cover border-4 border-sky-500/50 shadow-lg"
                 id="profile-photo"
